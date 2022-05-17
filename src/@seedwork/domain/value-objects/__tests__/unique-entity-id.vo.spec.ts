@@ -1,5 +1,5 @@
-import InvalidUuidErro from "../erros/invalid-uuid.error"
-import UniqueEntityId from "./unique-entity-id.vo"
+import InvalidUuidErro from "../../../errors/invalid-uuid.error"
+import UniqueEntityId from "../unique-entity-id.vo"
 import {validate as validateUUID } from "uuid"
 
 
@@ -15,13 +15,13 @@ describe('UniqueEntityID unit test', () => {
     it("Should accept a uuid passed on contructor", () => {
         const uuid = "d1d3c3e4-5dfe-4e0b-a946-09f6ea8fcb0f"
         const vo = new UniqueEntityId(uuid)
-        expect(vo.id).toBe(uuid)
+        expect(vo.value).toBe(uuid)
         expect(validateSpy).toBeCalled()
     })
 
     it("Should accept a uuid passed on contructor", () => {
         const vo = new UniqueEntityId()
-        expect(validateUUID(vo.id)).toBeTruthy()
+        expect(validateUUID(vo.value)).toBeTruthy()
         expect(validateSpy).toBeCalled()
     })
 
