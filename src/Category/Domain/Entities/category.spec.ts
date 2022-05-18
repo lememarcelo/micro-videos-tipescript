@@ -1,11 +1,11 @@
-import { Category, CategoryProperties } from "./category";
 import { omit } from "lodash";
-import { validate, v4 as uuidv4 } from "uuid";
+import { validate as uuidValidate} from 'uuid'
+
+import { Category } from "./category";
 import UniqueEntityId from "../../../@seedwork/domain/value-objects/unique-entity-id.vo";
 
 describe("Category unit tests", () => {
   test("Constructor of category", () => {
-    const date = new Date();
     let category: Category = new Category({ name: "Movie" });
     const props = omit(category.props, "created_at");
 
@@ -36,21 +36,22 @@ describe("Category unit tests", () => {
   test("ID Field", () => {
     let category: Category = new Category({ name: "Movie" });
     expect(category.id).not.toBeNull();
-    expect(category.id).toBeInstanceOf(UniqueEntityId);
+    expect(uuidValidate(category.id)).toBeTruthy;
 
 
     category = new Category({ name: "Movie"}, null);
     expect(category.id).not.toBeNull();
-    expect(category.id).toBeInstanceOf(UniqueEntityId);
+    expect(uuidValidate(category.id)).toBeTruthy;
   
     category = new Category({ name: "Movie"}, undefined);
     expect(category.id).not.toBeNull();
-    expect(category.id).toBeInstanceOf(UniqueEntityId);
+    expect(uuidValidate(category.id)).toBeTruthy;
   
     const id = new UniqueEntityId()
     category = new Category({ name: "Movie"}, id);
     expect(category.id).not.toBeNull();
-    expect(category.id).toBe(id)
+    expect(category.id).toBe(id.value)
 
   });
+
 });

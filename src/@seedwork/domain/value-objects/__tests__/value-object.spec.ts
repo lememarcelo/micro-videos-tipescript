@@ -1,4 +1,3 @@
-import { validate } from "uuid";
 import ValueObject from "../value-object";
 
 class StubValueObject extends ValueObject{
@@ -16,19 +15,11 @@ describe("ValueObject unit test", () => {
 
         vo = new StubValueObject(100)
         expect(vo.value).toBe(100)
-
-        vo = new StubValueObject(null)
-        expect( validate(vo.value) ).toBeTruthy;
-
-        vo = new StubValueObject(undefined)
-        expect( validate(vo.value) ).toBeTruthy;
     })
 
     it("Should convert to string", () => {
         const date = new Date()
         let arrange = [
-            {received: null, expected: "null"},
-            {received: undefined, expected: "undefined"},
             {received: "", expected: ""},
             {received: "fake test", expected: "fake test"},
             {received: 0, expected: "0"},
@@ -43,6 +34,21 @@ describe("ValueObject unit test", () => {
             const vo = new StubValueObject(element.received)
             expect(vo + "").toBe(element.expected)
         });
+    })
+
+    it("Should be a immutable object", () => {
+
+        const vo = new StubValueObject({
+            prop1: "Value 1",
+            deep: {
+                prop2: "value 2",
+                prop3: new Date()
+            }
+        })
+
+        expect(() => (vo as any).value.prop1 = "value 1").toThrow("Cannot assign to read only property 'prop1' of object '#<Object>'")
+        expect(() => (vo as any).value.deep.prop2 = "value 2").toThrow("Cannot assign to read only property 'prop2' of object '#<Object>'")
+        expect(vo.value.deep.prop3).toBeInstanceOf(Date)
     })
 
 })
